@@ -12,7 +12,7 @@ Latest stable Kernel patchlevel is applied and maintained by Community."
 ###############################################################################
 # This recipe (and corresponding kernel repository and branch) receives updates
 # from 3 different sources:
-# 1. Stable [linux-5.15.y] branch updates of korg;
+# 1. Stable [linux-5.10.y] branch updates of korg;
 # 2. NXP-specific updates via branch [5.10-2.1.x-imx] shared via CodeAurora forum;
 # 3. Critical patches, which are not (yet) integrated into either of 2 above
 #    sources, but are required to be applied to the kernel tree.
@@ -28,16 +28,21 @@ Latest stable Kernel patchlevel is applied and maintained by Community."
 # ------------------------------------------------------------------------------
 # 1. Stable (tag or SHA(s))
 # ------------------------------------------------------------------------------
-#    tag: v5.15.87
+#    tag: v5.10.69
 #
 # ------------------------------------------------------------------------------
 # 2. NXP-specific (tag or SHA(s))
 # ------------------------------------------------------------------------------
-#    tag: lf-5.15.71-2.2.0
+#    tag: lf-5.10.52-2.1.0
 #
 # ------------------------------------------------------------------------------
 # 3. Critical patches (SHA(s))
 # ------------------------------------------------------------------------------
+#    fb3e7593ee84 ("irq-imx-irqsteer: fix compile error if CONFIG_PM_SLEEP is not set")
+#    96613ac4e960 ("arm: imx: include i.MX6SX DDR freq implementation for i.MX6UL")
+#    36fea22d04f4 ("arm: imx: do not include smp_wfe_imx6.S for i.MX6SX")
+#    f86c8a4736f2 ("arm: imx: enable HAVE_IMX_BUSFREQ for i.MX6")
+#    05f7280c8648 ("arm: imx: do not build busfreq without HAVE_IMX_BUSFREQ")
 #
 # NOTE to upgraders:
 # This recipe should NOT collect individual patches, they should be applied to
@@ -47,22 +52,22 @@ Latest stable Kernel patchlevel is applied and maintained by Community."
 
 include linux-fslc.inc
 
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
-KBRANCH = "5.15-2.2.x-imx"
-SRCREV = "0eb4504bd3b8fd125e83ec62da9ba039519f96c8"
+KBRANCH = "5.10-2.1.x-imx"
+SRCREV = "54bd61ba352bffaf33ee2c956f140a565c9e2201"
 
 # PV is defined in the base in linux-imx.inc file and uses the LINUX_VERSION definition
 # required by kernel-yocto.bbclass.
 #
 # LINUX_VERSION define should match to the kernel version referenced by SRC_URI and
 # should be updated once patchlevel is merged.
-LINUX_VERSION = "5.15.87"
+LINUX_VERSION = "5.10.69"
 
 # Local version indicates the branch name in the NXP kernel tree where patches are collected from.
-LOCALVERSION = "-5.15.87-2.2.0"
+LOCALVERSION = "-5.10.52-2.1.0"
 
 DEFAULT_PREFERENCE = "1"
 
-COMPATIBLE_MACHINE = "(imx-nxp-bsp)"
+COMPATIBLE_MACHINE = "(mx6|mx7|mx8)"

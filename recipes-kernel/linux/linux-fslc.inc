@@ -3,8 +3,8 @@
 
 require recipes-kernel/linux/linux-imx.inc
 
-DEPENDS += "bc-native"
+DEPENDS += "lzop-native bc-native"
 
-SRC_URI = "git://github.com/Freescale/linux-fslc.git;branch=${KBRANCH};protocol=https \
+SRC_URI = "git://github.com/Freescale/linux-fslc.git;branch=${KBRANCH} \
            file://defconfig"
 LOCALVERSION = "-fslc"

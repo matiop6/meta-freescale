@@ -4,4 +4,4 @@
 
 PROVIDES = "linux-mfgtool"
 
-KERNEL_PACKAGE_NAME = "linux-mfgtool"
+KERNEL_PACKAGE_NAME = "mfgtool"

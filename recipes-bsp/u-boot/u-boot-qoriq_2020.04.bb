@@ -5,7 +5,7 @@ PROVIDES += "u-boot"
 
 inherit fsl-u-boot-localversion
 
-LICENSE = "GPL-2.0-only & BSD-3-Clause & BSD-2-Clause & LGPL-2.0-only & LGPL-2.1-only"
+LICENSE = "GPLv2 & BSD-3-Clause & BSD-2-Clause & LGPL-2.0 & LGPL-2.1"
 LIC_FILES_CHKSUM = " \
     file://Licenses/gpl-2.0.txt;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
     file://Licenses/bsd-2-clause.txt;md5=6a31f076f5773aabd8ff86191ad6fdd5 \
@@ -14,8 +14,8 @@ LIC_FILES_CHKSUM = " \
     file://Licenses/lgpl-2.1.txt;md5=4fbd65380cdd255951079008b364516c \
 "
 
-SRC_URI = "git://github.com/nxp-qoriq/u-boot;protocol=https;nobranch=1"
-SRCREV= "1c0116f3da250c5a52858c53efb8b38c0963f477"
+SRC_URI = "git://source.codeaurora.org/external/qoriq/qoriq-components/u-boot;nobranch=1"
+SRCREV= "f46a944f715f284aff1d42c009680ffe0be4058f"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
@@ -24,9 +24,9 @@ LOCALVERSION = "+fsl"
 
 INHIBIT_DEFAULT_DEPS = "1"
 DEPENDS = "libgcc virtual/${TARGET_PREFIX}gcc bison-native bc-native swig-native python3-native"
-DEPENDS:append:qoriq-arm64 = " dtc-native"
-DEPENDS:append:qoriq-arm = " dtc-native"
-DEPENDS:append:qoriq-ppc = " boot-format-native"
+DEPENDS:append_qoriq-arm64 = " dtc-native"
+DEPENDS:append_qoriq-arm = " dtc-native"
+DEPENDS:append_qoriq-ppc = " boot-format-native"
 
 python () {
     if d.getVar("TCMODE") == "external-fsl":
@@ -66,7 +66,7 @@ EXTRA_OEMAKE = 'CROSS_COMPILE=${WRAP_TARGET_PREFIX} CC="${WRAP_TARGET_PREFIX}gcc
 EXTRA_OEMAKE += 'HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}"'
 EXTRA_OEMAKE += 'STAGING_INCDIR=${STAGING_INCDIR_NATIVE} STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}'
 
-do_compile:append:qoriq() {
+do_compile:append_qoriq() {
     unset i j k
     for config in ${UBOOT_MACHINE}; do
         i=`expr $i + 1`;

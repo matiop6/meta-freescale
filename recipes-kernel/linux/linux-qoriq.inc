@@ -3,13 +3,13 @@ inherit fsl-kernel-localversion
 
 SUMMARY = "Linux Kernel for NXP QorIQ platforms"
 SECTION = "kernel"
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPLv2"
 
 S = "${WORKDIR}/git"
 
 DEPENDS:append = " libgcc"
 # not put Images into /boot of rootfs, install kernel-image if needed
-RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base = ""
+RDEPENDS:${KERNEL_PACKAGE_NAME}-base = ""
 
 KERNEL_CC:append = " ${TOOLCHAIN_OPTIONS}"
 KERNEL_LD:append = " ${TOOLCHAIN_OPTIONS}"
@@ -24,8 +24,9 @@ PV = "${LINUX_VERSION}+git${SRCPV}"
 SCMVERSION ?= "y"
 LOCALVERSION = ""
 DELTA_KERNEL_DEFCONFIG ?= ""
-DELTA_KERNEL_DEFCONFIG:prepend:qoriq-arm64 = "lsdk.config "
-DELTA_KERNEL_DEFCONFIG:prepend:qoriq-arm = "multi_v7_lpae.config lsdk.config "
+DELTA_KERNEL_DEFCONFIG:prepend_qoriq-arm64 = "lsdk.config "
+DELTA_KERNEL_DEFCONFIG:prepend_fsl-lsch2-32b = "multi_v7_lpae.config multi_v8.config lsdk.config "
+DELTA_KERNEL_DEFCONFIG:prepend_ls102xa = "multi_v7_lpae.config lsdk.config "
 
 do_merge_delta_config[depends] += "virtual/${TARGET_PREFIX}gcc:do_populate_sysroot bison-native:do_populate_sysroot"
 do_merge_delta_config[dirs] = "${B}"
@@ -53,6 +54,15 @@ do_merge_delta_config() {
     cp .config ${WORKDIR}/defconfig
 }
 addtask merge_delta_config before do_kernel_localversion after do_patch
+
+# The link of dts folder is needed for 32b compile of aarch64 targets(e.g. ls1043ardb-32b)
+do_compile:prepend_fsl-lsch2-32b() {
+    ln -sfT ${STAGING_KERNEL_DIR}/arch/arm64/boot/dts/freescale ${STAGING_KERNEL_DIR}/arch/arm/boot/dts/freescale
+}
+
+do_install:prepend_fsl-lsch2-32b() {
+    rm -f ${STAGING_KERNEL_DIR}/arch/arm/boot/dts/freescale
+}
 
 FILES:${KERNEL_PACKAGE_NAME}-image += "/boot/zImage*"
 COMPATIBLE_MACHINE = "(qoriq)"

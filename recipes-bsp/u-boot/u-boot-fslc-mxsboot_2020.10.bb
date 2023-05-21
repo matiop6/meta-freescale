@@ -3,7 +3,7 @@ require u-boot-fslc-common_${PV}.inc
 DESCRIPTION = "U-boot bootloader mxsboot tool"
 SECTION = "bootloader"
 
-DEPENDS = "swig-native bison-native gnutls-native dtc openssl"
+DEPENDS = "bison-native dtc openssl"
 
 PROVIDES = "u-boot-mxsboot"
 
@@ -27,6 +27,6 @@ do_install () {
     ln -sf uboot-mxsboot ${D}${bindir}/mxsboot
 }
 
-COMPATIBLE_MACHINE:class-target = "(mxs-generic-bsp)"
+COMPATIBLE_MACHINE:class-target = "(mxs|mx5|mx6|mx7|vf|use-mainline-bsp)"
 
 BBCLASSEXTEND = "native nativesdk"

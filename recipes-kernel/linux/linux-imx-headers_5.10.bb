@@ -4,13 +4,13 @@
 SUMMARY = "Installs i.MX-specific kernel headers"
 DESCRIPTION = "Installs i.MX-specific kernel headers to userspace. \
 New headers are installed in ${includedir}/imx."
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
+SRCBRANCH = "lf-5.10.y"
+LOCALVERSION = "-5.10.52-2.1.0"
 SRC_URI = "git://github.com/nxp-imx/linux-imx.git;protocol=https;branch=${SRCBRANCH}"
-SRCBRANCH = "lf-5.15.y"
-LOCALVERSION = "-5.15.71-2.2.0"
-SRCREV = "3313732e9984cb8a6b10a9085c7e18d58e770d56"
+SRCREV = "ef3f2cfc6010c13feb40cfb7fd7490832cf86f45"
 
 S = "${WORKDIR}/git"
 
@@ -22,6 +22,7 @@ IMX_UAPI_HEADERS = " \
     dma-buf.h \
     hantrodec.h \
     hx280enc.h \
+    ion.h \
     ipu.h \
     isl29023.h \
     imx_vpu.h \
@@ -39,21 +40,20 @@ IMX_UAPI_HEADERS = " \
 
 do_install() {
     # We install all headers inside of B so we can copy only the
-    # i.MX-specific ones, and there is no risk of a new header to be
+    # whitelisted ones, and there is no risk of a new header to be
     # installed by mistake.
     oe_runmake headers_install INSTALL_HDR_PATH=${B}${exec_prefix}
 
-    ################################################
-    # BEGIN Copy of exceptional logic from linux-libc-headers
     # Kernel should not be exporting this header
-    rm -f ${B}${exec_prefix}/include/scsi/scsi.h
+    rm -f ${D}${exec_prefix}/include/scsi/scsi.h
 
     # The ..install.cmd conflicts between various configure runs
-    find ${B}${includedir} -name ..install.cmd | xargs rm -f
-    # END Copy from linux-libc-headers
-    ################################################
+    find ${D}${includedir} -name ..install.cmd | xargs rm -f
 
-    # Install i.MX-specific headers only
+    # FIXME: The ion.h is still on staging so "promote" it for now
+    cp ${S}/drivers/staging/android/uapi/ion.h ${B}${includedir}/linux
+
+    # Install whitelisted headers only
     for h in ${IMX_UAPI_HEADERS}; do
         install -D -m 0644 ${B}${includedir}/linux/$h \
                        ${D}${includedir}/imx/linux/$h
@@ -75,5 +75,5 @@ PACKAGE_ARCH = "${MACHINE_SOCARCH}"
 
 # Restrict this recipe to NXP BSP only, this recipe is not compatible
 # with mainline BSP
-COMPATIBLE_HOST = '(null)'
-COMPATIBLE_HOST:use-nxp-bsp = '.*'
+COMPATIBLE_HOST = "aarch64-est-linux"
+COMPATIBLE_HOST_use-nxp-bsp = '.*'

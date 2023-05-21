@@ -3,16 +3,16 @@
 # Copyright (C) 2017-2021 NXP
 
 require recipes-bsp/u-boot/u-boot.inc
-require u-boot-imx-common_${PV}.inc
+require u-boot-imx-common_2021.04.inc
 
-PROVIDES += "u-boot"
+PROVIDES += "u-boot u-boot-mfgtool"
 
 inherit uuu_bootloader_tag
 
-UUU_BOOTLOADER            = ""
+UUU_BOOTLOADER                        = ""
 UUU_BOOTLOADER:mx6-generic-bsp        = "${UBOOT_BINARY}"
 UUU_BOOTLOADER:mx7-generic-bsp        = "${UBOOT_BINARY}"
-UUU_BOOTLOADER_TAGGED     = ""
+UUU_BOOTLOADER_TAGGED                 = ""
 UUU_BOOTLOADER_TAGGED:mx6-generic-bsp = "u-boot-tagged.${UBOOT_SUFFIX}"
 UUU_BOOTLOADER_TAGGED:mx7-generic-bsp = "u-boot-tagged.${UBOOT_SUFFIX}"
 
